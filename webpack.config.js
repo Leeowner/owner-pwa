@@ -1,7 +1,8 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-
 const outputDirectory = 'dist';
 
 module.exports = {
@@ -41,6 +42,17 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './public/index.html',
             favicon: './public/favicon.ico'
+        }),
+        new CopyWebpackPlugin([{
+            context: './public',
+            from: '*.*'
+        }]),
+        new SWPrecacheWebpackPlugin({
+            staticFileGlobs: [
+                path.join(path.resolve(__dirname, './build'), '**/*')
+            ],
+            logger: function () { },
+            filename: 'sw.js'
         })
     ]
 };
